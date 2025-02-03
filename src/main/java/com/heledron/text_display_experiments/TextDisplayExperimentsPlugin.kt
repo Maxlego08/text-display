@@ -1,17 +1,15 @@
 package com.heledron.text_display_experiments
 
-import com.heledron.text_display_experiments.bitmaps.setupBitmapDisplay
-import com.heledron.text_display_experiments.paint_program.setupPaintProgram
 import com.heledron.text_display_experiments.particle_system.setupParticleSystem
-import com.heledron.text_display_experiments.point_detector_visualizer.setUpPointDetectorVisualizer
-import com.heledron.text_display_experiments.utilities.*
+import com.heledron.text_display_experiments.utilities.closeCurrentPlugin
+import com.heledron.text_display_experiments.utilities.currentPlugin
+import com.heledron.text_display_experiments.utilities.openCustomItemInventory
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
-import org.joml.*
+import org.joml.Matrix4f
 
-val textBackgroundTransform: Matrix4f; get() = Matrix4f()
-    .translate(-0.1f + .5f,-0.5f + .5f,0f)
-    .scale(8.0f,4.0f,1f) //  + 0.003f  + 0.001f
+val textBackgroundTransform: Matrix4f
+    get() = Matrix4f().translate(-0.1f + .5f, -0.5f + .5f, 0f).scale(8.0f, 4.0f, 1f) //  + 0.003f  + 0.001f
 
 @Suppress("unused")
 class TextDisplayExperimentsPlugin : JavaPlugin() {
@@ -25,13 +23,14 @@ class TextDisplayExperimentsPlugin : JavaPlugin() {
 
         currentPlugin = this
 
-        setupBitmapDisplay()
+        setupParticleSystem()
+
+        /*setupBitmapDisplay()
         setupTextEntityUtilities()
         setupPaintProgram()
         setupCloak()
-        setupParticleSystem()
         setupColoredCauldrons()
-        setUpPointDetectorVisualizer()
+        setUpPointDetectorVisualizer()*/
 
         getCommand("items")?.setExecutor { sender, _, _, _ ->
             openCustomItemInventory(sender as? Player ?: run {

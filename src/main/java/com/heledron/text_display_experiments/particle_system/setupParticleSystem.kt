@@ -1,12 +1,17 @@
 package com.heledron.text_display_experiments.particle_system
 
-import com.heledron.text_display_experiments.utilities.*
+import com.heledron.text_display_experiments.utilities.getDouble
+import com.heledron.text_display_experiments.utilities.getInt
+import com.heledron.text_display_experiments.utilities.getString
+import com.heledron.text_display_experiments.utilities.onSpawnEntity
+import com.heledron.text_display_experiments.utilities.onTick
 import org.bukkit.NamespacedKey
 import kotlin.random.Random
 
 fun setupParticleSystem() {
     onSpawnEntity {
-        val paletteName = it.persistentDataContainer.getString(NamespacedKey.fromString("flame_particles:palette")!!) ?: return@onSpawnEntity
+        val paletteName = it.persistentDataContainer.getString(NamespacedKey.fromString("flame_particles:palette")!!)
+            ?: return@onSpawnEntity
 
         val palette = when (paletteName) {
             "blue_to_orange" -> blueToOrangeFlamePalette
@@ -24,19 +29,26 @@ fun setupParticleSystem() {
 
     onSpawnEntity {
         val amount = it.persistentDataContainer.getInt(NamespacedKey.fromString("water_splash_particles:amount")!!) ?: 0
-        val minSize = it.persistentDataContainer.getDouble(NamespacedKey.fromString("water_splash_particles:min_size")!!) ?: .1
-        val maxSize = it.persistentDataContainer.getDouble(NamespacedKey.fromString("water_splash_particles:max_size")!!) ?: (minSize * 1.75)
+        val minSize =
+            it.persistentDataContainer.getDouble(NamespacedKey.fromString("water_splash_particles:min_size")!!) ?: .1
+        val maxSize =
+            it.persistentDataContainer.getDouble(NamespacedKey.fromString("water_splash_particles:max_size")!!)
+                ?: (minSize * 1.75)
 
-        val minSpeed = it.persistentDataContainer.getDouble(NamespacedKey.fromString("water_splash_particles:min_speed")!!) ?: .3
-        val maxSpeed = it.persistentDataContainer.getDouble(NamespacedKey.fromString("water_splash_particles:max_speed")!!) ?: (minSpeed * 2.3)
+        val minSpeed =
+            it.persistentDataContainer.getDouble(NamespacedKey.fromString("water_splash_particles:min_speed")!!) ?: .3
+        val maxSpeed =
+            it.persistentDataContainer.getDouble(NamespacedKey.fromString("water_splash_particles:max_speed")!!)
+                ?: (minSpeed * 2.3)
 
-        val upAngleBias = it.persistentDataContainer.getInt(NamespacedKey.fromString("water_splash_particles:up_angle_bias")!!) ?: 4
+        val upAngleBias =
+            it.persistentDataContainer.getInt(NamespacedKey.fromString("water_splash_particles:up_angle_bias")!!) ?: 4
 
         for (i in 0 until amount) particles += WaterParticle(
             world = it.world,
             source = it.location.toVector(),
             position = it.location.toVector().apply {
-                val variance = 12/16.0
+                val variance = 12 / 16.0
                 x += Random.nextDouble(-variance, variance)
                 z += Random.nextDouble(-variance, variance)
             },
@@ -49,7 +61,8 @@ fun setupParticleSystem() {
     }
 
     onSpawnEntity {
-        val maxFireflies = it.persistentDataContainer.getInt(NamespacedKey.fromString("firefly_particles:amount")!!) ?: return@onSpawnEntity
+        val maxFireflies = it.persistentDataContainer.getInt(NamespacedKey.fromString("firefly_particles:amount")!!)
+            ?: return@onSpawnEntity
 
         val range = 7.0
         val spawnRange = .0
@@ -77,7 +90,7 @@ fun setupParticleSystem() {
     }
 }
 
-internal val particles = mutableListOf<Particle>()
+val particles = mutableListOf<Particle>()
 
 interface Particle {
     fun update()
