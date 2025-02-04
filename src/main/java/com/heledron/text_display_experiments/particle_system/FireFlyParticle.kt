@@ -1,9 +1,12 @@
 package com.heledron.text_display_experiments.particle_system
 
 import com.heledron.text_display_experiments.textBackgroundTransform
-import com.heledron.text_display_experiments.utilities.*
+import com.heledron.text_display_experiments.utilities.FORWARD_VECTOR
+import com.heledron.text_display_experiments.utilities.lerpRGB
+import com.heledron.text_display_experiments.utilities.moveTowards
 import com.heledron.text_display_experiments.utilities.rendering.SharedEntityRenderer
 import com.heledron.text_display_experiments.utilities.rendering.textRenderEntity
+import com.heledron.text_display_experiments.utilities.rotate
 import org.bukkit.Color
 import org.bukkit.World
 import org.bukkit.entity.Display
@@ -15,9 +18,8 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 class FireFlyParticle(
-    val world: World,
-    val position: Vector
-): Particle {
+    val world: World, val position: Vector
+) : Particle {
     val spawnPosition = position.clone()
 
     var age = 0
@@ -56,7 +58,7 @@ class FireFlyParticle(
 
 
         val blinkDuration = 20
-        if (blinkTick <= 0) blinkTick = blinkDuration + Random.nextInt(20,100)
+        if (blinkTick <= 0) blinkTick = blinkDuration + Random.nextInt(20, 100)
 
         val blink = if (blinkTick in 0..<blinkDuration) {
             sin(blinkTick.toDouble() / blinkDuration * Math.PI)
@@ -84,20 +86,16 @@ class FireFlyParticle(
 
         position.add(velocity)
 
-        SharedEntityRenderer.render(this, textRenderEntity(
-            world = world,
-            position = position,
-            init = {
-                it.text = " "
-                it.billboard = Display.Billboard.CENTER
-                it.teleportDuration = 1
-                it.setTransformationMatrix(Matrix4f().scale(.1f).mul(textBackgroundTransform))
-            },
-            update = {
-                it.brightness = Display.Brightness((15 * (1 - blink)).toInt(), 15)
-                it.backgroundColor = color.setAlpha(opacity.toInt()).lerpRGB(blinkColor, blink)
-            }
-        ))
+        SharedEntityRenderer.render(this, textRenderEntity(world = world, position = position, init = {
+            it.text = " "
+            it.isPersistent = false;
+            it.billboard = Display.Billboard.CENTER
+            it.teleportDuration = 1
+            it.setTransformationMatrix(Matrix4f().scale(.1f).mul(textBackgroundTransform))
+        }, update = {
+            it.brightness = Display.Brightness((15 * (1 - blink)).toInt(), 15)
+            it.backgroundColor = color.setAlpha(opacity.toInt()).lerpRGB(blinkColor, blink)
+        }))
     }
 
 
